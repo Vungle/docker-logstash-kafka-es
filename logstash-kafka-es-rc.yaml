@@ -10,22 +10,19 @@ spec:
         app: logstash
     spec:
       containers:
-      - name: logstash
-        image: vungle/logstash-kafka-es:2.2.0
-        imagePullPolicy: Always
-        env:
+      - env:
         - name: ZK_CONNECT_LIST
           value: 172.16.33.211,172.16.31.246,172.16.32.92,172.16.31.247,172.16.32.186
         - name: KAFKA_TOPIC
           value: as-exchange
         - name: ES_URL
-          value: 10.100.59.80:80
+          value: "$(ELASTICSEARCH_PORT_80_TCP_ADDR):80"
         - name: ES_INDEX
           value: as-exchange
         - name: BATCH_SIZE
-          value: 10000
+          value: "10000"
         - name: JAVA_OPTS
-          value: "-XX:+UseG1GC -Djava.awt.headless=true -XX:+HeapDumpOnOutOfMemoryError
+          value: "-XX:+UseG1GC -Djava.awt.headless=true -XX:+HeapDumpOnOutOfMemoryError"
         - name: EXTRA_FILTERS
           value: |
             filter {
@@ -57,3 +54,10 @@ spec:
                 }
               }
             }
+        name: logstash
+        image: vungle/logstash-kafka-es:2.2.0
+        imagePullPolicy: Always
+        resources: 
+          requests:
+            memory: "8Mi"
+            #cpu: "250m"
