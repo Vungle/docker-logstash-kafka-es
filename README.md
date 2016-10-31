@@ -22,5 +22,6 @@ docker run --name logstash \
   -e KAFKA_TOPIC=as-requestAd \
   -e ES_URL=http://19.18.17.16/ \
   -e ES_INDEX=as-requestad \
+  -e CODEC=magic \
   vungle/docker-logstash-kafka-es:2.2.0
 ```
