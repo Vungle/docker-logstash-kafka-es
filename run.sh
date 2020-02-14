@@ -45,4 +45,4 @@ if [ "x$DEBUG" != "x" ]; then
 fi
 
 cat /logstash/config/logstash.conf
-exec /logstash/bin/logstash --quiet -f /logstash/config/ -b ${BATCH_SIZE}
+exec /logstash/bin/logstash --quiet -f /logstash/config/logstash.conf -b ${BATCH_SIZE}

@@ -14,7 +14,6 @@ RUN \
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
-RUN rm -rf /logstash/config/logstash-sample.conf
 
 COPY config/ /logstash/config/
 
