@@ -8,6 +8,7 @@ BATCH_SIZE=${BATCH_SIZE:-1000}
 GROUPID=${GROUPID:-logstash_$KAFKA_TOPIC\_$ES_INDEX}
 CONSUMER_THREADS=${CONSUMER_THREADS:-8}
 
+
 # JAVA_HOME is invalid in this base image
 unset JAVA_HOME
 
@@ -35,6 +36,7 @@ sed -i "s#__ESURL__#$ES_URL#" /logstash/config/logstash.conf
 sed -i "s#__FLUSHSIZE__#$BATCH_SIZE#" /logstash/config/logstash.conf
 sed -i "s#__GROUPID__#$GROUPID#" /logstash/config/logstash.conf
 sed -i "s#__CONSUMERTHREADS__#$CONSUMER_THREADS#" /logstash/config/logstash.conf
+SED -I "S#__CODEC_TYPE__#$CODEC_TYPE#" /logstash/config/logstash.conf
 echo "$EXTRA_FILTERS" >> /logstash/config/logstash.conf
 
 # Debug mode?
