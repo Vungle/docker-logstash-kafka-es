@@ -28,7 +28,6 @@ fi
 
 # inject ENVs into placeholders
 sed -i "s#__KAFKALIST__#$KAFKA_LIST#" /logstash/config/logstash.conf
-sed -i "s#__MESSAGEMAX__#$MESSAGE_MAX_BYTES#" /logstash/config/logstash.conf
 sed -i "s#__MESSAGETYPE__#$MESSAGE_TYPE#" /logstash/config/logstash.conf
 sed -i "s#__KAFKATOPIC__#$KAFKA_TOPIC#" /logstash/config/logstash.conf
 sed -i "s#__ESINDEX__#$ES_INDEX#" /logstash/config/logstash.conf
