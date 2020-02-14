@@ -18,7 +18,7 @@ Run:
 ```
 docker run --name logstash \
   --detach \
-  -e ZK_CONNECT_LIST=1.2.3.4,5.6.7.8 \
+  -e KAFKA_LIST=1.2.3.4,5.6.7.8 \
   -e KAFKA_TOPIC=as-requestAd \
   -e ES_URL=http://19.18.17.16/ \
   -e ES_INDEX=as-requestad \
