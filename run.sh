@@ -6,6 +6,7 @@ MESSAGE_TYPE=${MESSAGE_TYPE:-$KAFKA_TOPIC}
 ES_INDEX=${ES_INDEX:-$KAFKA_TOPIC}
 BATCH_SIZE=${BATCH_SIZE:-1000}
 GROUPID=${GROUPID:-logstash_$KAFKA_TOPIC\_$ES_INDEX}
+CONSUMER_THREADS=${CONSUMER_THREADS:-8}
 
 # JAVA_HOME is invalid in this base image
 unset JAVA_HOME
@@ -19,14 +20,14 @@ if [ "x$KAFKA_TOPIC" = "x" ] ; then
   echo "ERROR: ENV variable KAFKA_TOPIC must be declared" >&2
   exit 2
 fi
-if [ "x$ZK_CONNECT_LIST" = "x" ] ; then
-  echo "ERROR: ENV variable ZK_CONNECT_LIST must be declared" >&2
+if [ "x$KAFKA_LIST" = "x" ] ; then
+  echo "ERROR: ENV variable KAFKA_LIST must be declared" >&2
   exit 3
 fi
 
 
 # inject ENVs into placeholders
-sed -i "s#__ZKCONNECTLIST__#$ZK_CONNECT_LIST#" /logstash/config/logstash.conf
+sed -i "s#__KAFKALIST__#$KAFKA_LIST#" /logstash/config/logstash.conf
 sed -i "s#__MESSAGEMAX__#$MESSAGE_MAX_BYTES#" /logstash/config/logstash.conf
 sed -i "s#__MESSAGETYPE__#$MESSAGE_TYPE#" /logstash/config/logstash.conf
 sed -i "s#__KAFKATOPIC__#$KAFKA_TOPIC#" /logstash/config/logstash.conf
@@ -34,6 +35,7 @@ sed -i "s#__ESINDEX__#$ES_INDEX#" /logstash/config/logstash.conf
 sed -i "s#__ESURL__#$ES_URL#" /logstash/config/logstash.conf
 sed -i "s#__FLUSHSIZE__#$BATCH_SIZE#" /logstash/config/logstash.conf
 sed -i "s#__GROUPID__#$GROUPID#" /logstash/config/logstash.conf
+sed -i "s#__CONSUMERTHREADS__#$CONSUMER_THREADS#" /logstash/config/logstash.conf
 echo "$EXTRA_FILTERS" >> /logstash/config/logstash.conf
 
 # Debug mode?
