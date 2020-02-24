@@ -6,6 +6,8 @@
 # host system.	
 export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $LS_JAVA_OPTS"
 
+cat /logstash/config/logstash.conf
+
 if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
   exec /logstash/bin/logstash "$@"
 else
