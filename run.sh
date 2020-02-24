@@ -9,7 +9,7 @@ export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.ov
 MY_POD_NAME=${MY_POD_NAME:-logstash}
 
 # inject ENVs into placeholders
-sed "s#__ESPLUGINID__#$MY_POD_NAME#" /logstash/config-tmpl/logstash.conf /logstash/config/logstash.conf
+sed "s#__ESPLUGINID__#$MY_POD_NAME#" /logstash/config-tmpl/logstash.conf > /logstash/config/logstash.conf
 
 cat /logstash/config/logstash.conf
 
