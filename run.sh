@@ -6,6 +6,8 @@
 # host system.	
 export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $LS_JAVA_OPTS"
 
+MY_POD_NAME=${MY_POD_NAME:-logstash}
+
 # inject ENVs into placeholders
 sed -i "s#__ESPLUGINID__#$MY_POD_NAME#" /logstash/config/logstash.conf
 
