@@ -6,6 +6,9 @@
 # host system.	
 export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $LS_JAVA_OPTS"
 
+# inject ENVs into placeholders
+sed -i "s#__ESPLUGINID__#$MY_POD_NAME#" /logstash/config/logstash.conf
+
 cat /logstash/config/logstash.conf
 
 if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
