@@ -15,7 +15,7 @@ RUN \
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-COPY config/ /logstash/config/
+#COPY config/ /logstash/config/
 
 
 # Optional certificates folder

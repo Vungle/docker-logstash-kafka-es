@@ -1,49 +1,15 @@
-#!/bin/sh
+#!/bin/bash -e
 
-# set ENV defaults
-MESSAGE_MAX_BYTES=${MESSAGE_MAX_BYTES:-10485760}
-MESSAGE_TYPE=${MESSAGE_TYPE:-$KAFKA_TOPIC}
-ES_INDEX=${ES_INDEX:-$KAFKA_TOPIC}
-BATCH_SIZE=${BATCH_SIZE:-1000}
-GROUPID=${GROUPID:-logstash_$KAFKA_TOPIC\_$ES_INDEX}
-CONSUMER_THREADS=${CONSUMER_THREADS:-8}
+# Map environment variables to entries in logstash.yml.
+# Note that this will mutate logstash.yml in place if any such settings are found.
+# This may be undesirable, especially if logstash.yml is bind-mounted from the
+# host system.
+env2yaml /usr/share/logstash/config/logstash.yml
 
+export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $LS_JAVA_OPTS"
 
-# JAVA_HOME is invalid in this base image
-unset JAVA_HOME
-
-# check for required ENVs
-if [ "x$ES_URL" = "x" ] ; then
-  echo "ERROR: ENV variable ES_URL must be declared" >&2
-  exit 1
+if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
+  exec logstash "$@"
+else
+  exec "$@"
 fi
-if [ "x$KAFKA_TOPIC" = "x" ] ; then
-  echo "ERROR: ENV variable KAFKA_TOPIC must be declared" >&2
-  exit 2
-fi
-if [ "x$KAFKA_LIST" = "x" ] ; then
-  echo "ERROR: ENV variable KAFKA_LIST must be declared" >&2
-  exit 3
-fi
-
-
-# inject ENVs into placeholders
-sed -i "s#__KAFKALIST__#$KAFKA_LIST#" /logstash/config/logstash.conf
-sed -i "s#__MESSAGETYPE__#$MESSAGE_TYPE#" /logstash/config/logstash.conf
-sed -i "s#__KAFKATOPIC__#$KAFKA_TOPIC#" /logstash/config/logstash.conf
-sed -i "s#__ESINDEX__#$ES_INDEX#" /logstash/config/logstash.conf
-sed -i "s#__ESURL__#$ES_URL#" /logstash/config/logstash.conf
-sed -i "s#__FLUSHSIZE__#$BATCH_SIZE#" /logstash/config/logstash.conf
-sed -i "s#__GROUPID__#$GROUPID#" /logstash/config/logstash.conf
-sed -i "s#__CONSUMERTHREADS__#$CONSUMER_THREADS#" /logstash/config/logstash.conf
-sed -i "s#__CODEC_TYPE__#$CODEC_TYPE#" /logstash/config/logstash.conf
-echo "$EXTRA_FILTERS" >> /logstash/config/logstash.conf
-
-# Debug mode?
-if [ "x$DEBUG" != "x" ]; then
-  sed -i 's#output {#output {\n  stdout {\n    codec => "rubydebug"\n  }\n#' /logstash/config/logstash.conf
-
-fi
-
-cat /logstash/config/logstash.conf
-exec /logstash/bin/logstash --quiet -f /logstash/config/logstash.conf -b ${BATCH_SIZE}
