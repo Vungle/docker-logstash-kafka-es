@@ -14,6 +14,7 @@ RUN \
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
+RUN /logstash/bin/logstash-plugin update logstash-output-elasticsearch
 
 #COPY config/ /logstash/config/
 
