@@ -13,6 +13,8 @@ sed "s#__CLIENTID__#$MY_POD_NAME#" /logstash/config-tmpl/logstash.conf > /logsta
 
 cat /logstash/config/logstash.conf
 
+/logstash/bin/logstash-plugin update logstash-output-elasticsearch
+
 if [[ -z $1 ]] || [[ ${1:0:1} == '-' ]] ; then
   exec /logstash/bin/logstash "$@"
 else
